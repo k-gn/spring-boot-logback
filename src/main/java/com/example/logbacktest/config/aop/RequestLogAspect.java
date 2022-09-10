@@ -28,16 +28,21 @@ public class RequestLogAspect {
 
     @Before("onRequest()")
     public void beforeParameterLog(JoinPoint joinPoint) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        logger.info("======================================================================");
-        logger.info("Request: {} - {} {}", getTimeStamp(), request.getRemoteAddr(), request.getRequestURI());
-        logger.info("{} - {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName());
+        HttpServletRequest request
+                = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        logger.debug("============================= Request Info Start ==============================");
+        logger.debug("Request: {} - {} {}", getTimeStamp(), RequestIpProvider.getIp(request), request.getRequestURI());
+        logger.debug("{} - {}", getDeclaringTypeName(joinPoint), getMethod(joinPoint).getName());
 
         Object[] args = joinPoint.getArgs();
-        if (args.length <= 0) logger.info("[INFO] no parameter");
-        for (Object arg : args) {
-            logger.info("[INFO] parameter value: {}", arg);
+        if (args == null || args.length <= 0) {
+            logger.debug("No Parameter");
+        } else {
+            for (Object arg : args) {
+                logger.debug("Parameter Value: {}", arg);
+            }
         }
+        logger.debug("============================== Request Info End =============================");
     }
 
     private String getTimeStamp() {

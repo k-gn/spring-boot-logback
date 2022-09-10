@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-    <property name="LOG_PATTERN" value="[%-5level] %d{yyyy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
-    <property name="LOG_DIR" value="/logs/v1" />
+    <property name="LOG_PATTERN" value="%cyan([%d{yyyy-MM-dd HH:mm:ss}[%thread]]) %highlight([%level]) [%logger{0}:%line] - %msg%n" />
+    <property name="LOG_DIR" value="/logs" />
+    <!--    <property name="LOG_DIR" value="logs" />-->
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -12,7 +13,9 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
-    </appender> <!-- File Appender -->
+    </appender>
+
+    <!-- File Appender -->
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/debug/current.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -31,34 +34,46 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
-    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/info/current.log</file>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>info</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/info/info.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>50MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-    </appender>
 
     <logger name="org.hibernate.SQL" level="DEBUG">
-        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="DEBUG" />
     </logger>
-    <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG">
-        <appender-ref ref="DEBUG"/>
+    <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG" >
+        <appender-ref ref="DEBUG" />
+    </logger>
+    <logger name="org.hibernate.stat" level="DEBUG" >
+        <appender-ref ref="DEBUG" />
+    </logger>
+    <logger name="org.hibernate.SQL_SLOW" level="DEBUG" >
+        <appender-ref ref="DEBUG" />
     </logger>
 
-    <root level="INFO">
+    <logger name="org.springframework.data" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <logger name="org.springframework.web" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <logger name="org.springframework.http" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <logger name="org.springframework.security" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <logger name="com.sae_seoul.server" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="DEBUG" />
+    </logger>
+
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="INFO" />
     </root>
 </configuration>
